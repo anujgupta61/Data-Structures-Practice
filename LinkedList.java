@@ -8,7 +8,34 @@ class Node {
 class MyLinkedList {
   public Node head ;
 
-  public int getLengthIterative()
+  public Node getNodeAtPos(int p) {
+    if(p < 0)
+      return null ;
+    Node temp = this . head ;
+    for(int i = 0 ; i < p ; i ++) {
+      temp = temp . next ;
+      if(temp == null)
+        return null ;
+    }
+    return temp ;
+  }
+
+  public int getLengthIterative() {
+    Node temp = this . head ;
+    int len = 0 ;
+    while(temp != null) {
+      len ++ ;
+      temp = temp . next ;
+    }
+    return len ;
+  }
+
+  public int getLengthRecursive(Node temp) {
+    if(temp == null)
+      return 0 ;
+    else
+      return getLengthRecursive(temp . next) + 1 ;
+  }
 
   // Only Insertion takes O(1) time
   public void insertElem(int num , int pos) {
@@ -80,6 +107,33 @@ class MyLinkedList {
     }
   }
 
+  public void swapNodes(int p1 , int p2) {
+    Node pre1 = this . getNodeAtPos(p1 - 1) ;
+    Node curr1 = this . getNodeAtPos(p1) ;
+    Node pre2 = this . getNodeAtPos(p2 - 1) ;
+    Node curr2 = this . getNodeAtPos(p2) ;
+    if(curr1 == null || curr2 == null) {
+      System . out . println("Invalid positions ...") ;
+      return ;
+    }
+    if(curr1 . equals(curr2)) {
+      System . out . println("Both positions are same ...") ;
+      return ;
+    }
+    if(pre1 == null)
+      this . head = curr2 ;
+    else
+      pre1 . next = curr2 ;
+    if(pre2 == null)
+      this . head = curr1 ;
+    else
+      pre2 . next = curr1 ;
+    Node temp = curr1 . next ;
+    curr1 . next = curr2 . next ;
+    curr2 . next = temp ;
+    System . out . println("Swapping successful ...") ;
+  }
+
   public void printList() {
     if(this . head == null) {
       System . out . println("Linked list is empty ...") ;
@@ -100,7 +154,10 @@ public class LinkedList {
     MyLinkedList list = new MyLinkedList() ;
     int choice = 1 ;
     while(choice != 3) {
-      System . out . println("Choose -\n1 : Insert\n2 : Display\n3 : Exit\n4 : Delete by value\n5 : Delete by position") ;
+      System . out . println("Choose -\n1 : Insert\n2 : Display\n3 : Exit\n4 : Delete by value\n" +
+      "5 : Delete by position\n6 : Get length iterative\n7 : Get length recursive\n8 : Swap nodes\n" +
+      "9 : Get value at position") ;
+      System . out . print("Your choice : ") ;
       Scanner reader = new Scanner(System . in) ;
       choice = reader . nextInt() ;
       switch(choice) {
@@ -136,6 +193,33 @@ public class LinkedList {
           System . out . print("Enter position to delete : ") ;
           int pos = reader . nextInt() ;
           list . deleteByPos(pos) ;
+          break ;
+        }
+        case 6 : {
+          int len_i = list . getLengthIterative() ;
+          System . out . println("Length (Iterative) : " + len_i) ;
+          break ;
+        }
+        case 7 : {
+          int len_r = list . getLengthRecursive(list . head) ;
+          System . out . println("Length (Recursive) : " + len_r) ;
+          break ;
+        }
+        case 8 : {
+          System . out . print("Enter position 1 and position 2 to swap : ") ;
+          int p1 = reader . nextInt() ;
+          int p2 = reader . nextInt() ;
+          list . swapNodes(p1 , p2) ;
+          break ;
+        }
+        case 9 : {
+          System . out . print("Enter position : ") ;
+          int p = reader . nextInt() ;
+          Node t = list . getNodeAtPos(p) ;
+          if(t != null)
+            System . out . println(t . data) ;
+          else
+            System . out . println("Invalid position ...") ;
           break ;
         }
         default : {
