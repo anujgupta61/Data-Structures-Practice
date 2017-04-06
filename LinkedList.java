@@ -20,6 +20,64 @@ class MyLinkedList {
     return temp ;
   }
 
+  public void reverseLinkedListIterative() {
+    Node temp1 = this . head ;
+    Node temp2 = this . head . next ;
+    temp1 . next = null ;
+    Node temp = temp1 ;
+    while(temp2 != null) {
+      temp1 = temp2 ;
+      temp2 = temp2 . next ;
+      temp1 . next = temp ;
+      temp = temp1 ;
+    }
+    this . head = temp1 ;
+    System . out . println("Linked list reversed ...") ;
+  }
+
+  public void reverseLinkedListRecursive2(Node pre , Node curr) { // Tail recursive
+    if(curr . next == null) {
+      this . head = curr ;
+      curr . next = pre ;
+      return ;
+    }
+    Node curr1 = curr . next ;
+    curr . next = pre ;
+    pre = curr ;
+    reverseLinkedListRecursive2(pre , curr1) ;
+  }
+
+  public void reverseLinkedListRecursive1(Node first , Node rest) { // Head recursive
+    if(rest == null) {
+      return ;
+    }
+    if(rest . next == null)
+      this . head = rest ;
+    reverseLinkedListRecursive1(rest , rest . next) ;
+    rest . next = first ;
+  }
+
+  public static void sortedMergeTwoSortedLinkedList(Node first , Node second) {
+    if(first == null || second == null) {
+        return ;
+    }
+    if(first . data <= second . data) {
+      Node temp = first . next ;
+      first . next = second ;
+      if(temp == null)
+        System . out . println("temp null ...") ;
+      if(second == null)
+        System . out . println("second null ...") ;
+      System . out . println("list 1 ...") ;
+      sortedMergeTwoSortedLinkedList(temp , second) ;
+    } else {
+      Node temp = second . next ;
+      second . next = first ;
+      System . out . println("list 2 ...") ;
+      sortedMergeTwoSortedLinkedList(first , temp) ;
+    }
+  }
+
   public int getLengthIterative() {
     Node temp = this . head ;
     int len = 0 ;
@@ -156,7 +214,8 @@ public class LinkedList {
     while(choice != 3) {
       System . out . println("Choose -\n1 : Insert\n2 : Display\n3 : Exit\n4 : Delete by value\n" +
       "5 : Delete by position\n6 : Get length iterative\n7 : Get length recursive\n8 : Swap nodes\n" +
-      "9 : Get value at position") ;
+      "9 : Get value at position\n10 : Reverse Linked list iteratively\n11 : Reverse Linked list recursively (Method 1)\n" +
+      "12 : Reverse Linked list recursively (Method 2)\n13 : Merge two sorted Linked list") ;
       System . out . print("Your choice : ") ;
       Scanner reader = new Scanner(System . in) ;
       choice = reader . nextInt() ;
@@ -220,6 +279,64 @@ public class LinkedList {
             System . out . println(t . data) ;
           else
             System . out . println("Invalid position ...") ;
+          break ;
+        }
+        case 10 : {
+          if(list . head == null) {
+            System . out . println("Linked list is empty ...") ;
+            break ;
+          }
+          list . reverseLinkedListIterative() ;
+          break ;
+        }
+        case 11 : {
+          if(list . head == null) {
+            System . out . println("Linked list is empty ...") ;
+            break ;
+          }
+          list . reverseLinkedListRecursive1(null , list . head) ;
+          System . out . println("Linked list reversed ...") ;
+          break ;
+        }
+        case 12 : {
+          if(list . head == null) {
+            System . out . println("Linked list is empty ...") ;
+            break ;
+          }
+          list . reverseLinkedListRecursive2(null , list . head) ;
+          System . out . println("Linked list reversed ...") ;
+          break ;
+        }
+        case 13 : {
+          MyLinkedList list1 = new MyLinkedList() ;
+          System . out . print("Enter number of nodes in linked list 1 : ") ;
+          int n1 = reader . nextInt() ;
+          System . out . print("Enter data in nodes of linked list 1 : ") ;
+          for(int i = 0 ; i < n1 ; i ++) {
+            int num = reader . nextInt() ;
+            list1 . insertElem(num , list1 . getLengthIterative()) ;
+          }
+          MyLinkedList list2 = new MyLinkedList() ;
+          System . out . print("Enter number of nodes in linked list 2 : ") ;
+          int n2 = reader . nextInt() ;
+          System . out . print("Enter data in nodes of linked list 2 : ") ;
+          for(int i = 0 ; i < n2 ; i ++) {
+            int num = reader . nextInt() ;
+            list2 . insertElem(num , list2 . getLengthIterative()) ;
+          }
+          MyLinkedList list3 = new MyLinkedList() ;
+          if(list1 . head . data <= list2 . head . data)
+            list3 . head = list1 . head ;
+          else
+            list3 . head = list2 . head ;
+          MyLinkedList . sortedMergeTwoSortedLinkedList(list1 . head , list2 . head) ;
+          System . out . print("After merging : ") ;
+          Node temp = list3 . head ;
+
+          while(temp != null)
+            System . out . print(temp . data + " ") ;
+          System . out . print("\n") ;
+          
           break ;
         }
         default : {
