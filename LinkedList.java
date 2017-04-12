@@ -59,22 +59,22 @@ class MyLinkedList {
 
   public static void sortedMergeTwoSortedLinkedList(Node first , Node second) {
     if(first == null || second == null) {
-        return ;
+      return ;
     }
     if(first . data <= second . data) {
-      Node temp = first . next ;
-      first . next = second ;
-      if(temp == null)
-        System . out . println("temp null ...") ;
-      if(second == null)
-        System . out . println("second null ...") ;
-      System . out . println("list 1 ...") ;
-      sortedMergeTwoSortedLinkedList(temp , second) ;
+      Node temp = first ;
+      while(temp . next != null && temp . next . data <= second . data)
+        temp = temp . next ;
+      Node temp1 = temp . next ;
+      temp . next = second ;
+      sortedMergeTwoSortedLinkedList(temp1 , second) ;
     } else {
-      Node temp = second . next ;
-      second . next = first ;
-      System . out . println("list 2 ...") ;
-      sortedMergeTwoSortedLinkedList(first , temp) ;
+      Node temp = second ;
+      while(temp . next != null && temp . next . data < first . data)
+        temp = temp . next ;
+      Node temp1 = temp . next ;
+      temp . next = first ;
+      sortedMergeTwoSortedLinkedList(first , temp1) ;
     }
   }
 
@@ -215,7 +215,8 @@ public class LinkedList {
       System . out . println("Choose -\n1 : Insert\n2 : Display\n3 : Exit\n4 : Delete by value\n" +
       "5 : Delete by position\n6 : Get length iterative\n7 : Get length recursive\n8 : Swap nodes\n" +
       "9 : Get value at position\n10 : Reverse Linked list iteratively\n11 : Reverse Linked list recursively (Method 1)\n" +
-      "12 : Reverse Linked list recursively (Method 2)\n13 : Merge two sorted Linked list") ;
+      "12 : Reverse Linked list recursively (Method 2)\n13 : Merge two sorted Linked list\n" +
+      "14 : Merge Sort") ;
       System . out . print("Your choice : ") ;
       Scanner reader = new Scanner(System . in) ;
       choice = reader . nextInt() ;
@@ -309,35 +310,30 @@ public class LinkedList {
         }
         case 13 : {
           MyLinkedList list1 = new MyLinkedList() ;
-          System . out . print("Enter number of nodes in linked list 1 : ") ;
+          System . out . print("Enter number of nodes (> 0) in linked list to be merged : ") ;
           int n1 = reader . nextInt() ;
-          System . out . print("Enter data in nodes of linked list 1 : ") ;
-          for(int i = 0 ; i < n1 ; i ++) {
-            int num = reader . nextInt() ;
-            list1 . insertElem(num , list1 . getLengthIterative()) ;
+          if(n1 > 0) {
+            System . out . print("Enter data in nodes of linked list to be merged : ") ;
+            for(int i = 0 ; i < n1 ; i ++) {
+              int num = reader . nextInt() ;
+              list1 . insertElem(num , list1 . getLengthIterative()) ;
+            }
+            if(list . head != null) {
+              MyLinkedList . sortedMergeTwoSortedLinkedList(list1 . head , list . head) ;
+              if(list1 . head . data <= list . head . data)
+                list . head = list1 . head ;
+            }
+            else
+              list . head = list1 . head ;
           }
-          MyLinkedList list2 = new MyLinkedList() ;
-          System . out . print("Enter number of nodes in linked list 2 : ") ;
-          int n2 = reader . nextInt() ;
-          System . out . print("Enter data in nodes of linked list 2 : ") ;
-          for(int i = 0 ; i < n2 ; i ++) {
-            int num = reader . nextInt() ;
-            list2 . insertElem(num , list2 . getLengthIterative()) ;
-          }
-          MyLinkedList list3 = new MyLinkedList() ;
-          if(list1 . head . data <= list2 . head . data)
-            list3 . head = list1 . head ;
-          else
-            list3 . head = list2 . head ;
-          MyLinkedList . sortedMergeTwoSortedLinkedList(list1 . head , list2 . head) ;
           System . out . print("After merging : ") ;
-          Node temp = list3 . head ;
-
-          while(temp != null)
-            System . out . print(temp . data + " ") ;
-          System . out . print("\n") ;
-          
+          list . printList() ;
           break ;
+        }
+        case 14 : {
+          System . out . print("After sorting : ") ;
+          list . mergeSort() ;
+          list . printList() ;
         }
         default : {
           System . out . println("Invalid choice ... Try again ...") ;
