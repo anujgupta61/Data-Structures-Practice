@@ -35,6 +35,35 @@ class MyLinkedList {
     System . out . println("Linked list reversed ...") ;
   }
 
+  public void reverseLinkedListInGroups(int k) {
+    Node temp1 = this . head ;
+    Node temp2 = this . head . next ;
+    Node pre = null ;
+    for(int j = 0 ; temp1 != null ; j += k) {
+      Node temp = temp1 ;
+      int i = 0 ;
+      Node t = temp ;
+      while(temp2 != null && i < k - 1) {
+        temp1 = temp2 ;
+        temp2 = temp2 . next ;
+        temp1 . next = temp ;
+        temp = temp1 ;
+        i ++ ;
+      }
+      if(j == 0)
+        this . head = temp1 ;
+      else {
+        pre . next = temp1 ;
+      }
+      temp1 = temp2 ;
+      if(temp2 != null)
+        temp2 = temp2 . next ;
+      pre = t ;
+    }
+    if(temp2 == null)
+      pre . next = null ;
+  }
+
   public void reverseLinkedListRecursive2(Node pre , Node curr) { // Tail recursive
     if(curr . next == null) {
       this . head = curr ;
@@ -57,7 +86,7 @@ class MyLinkedList {
     rest . next = first ;
   }
 
-  public Node breakIntoHalf(Node source) {
+  private Node breakIntoHalf(Node source) {
     Node fast , slow ;
     if(source == null || source . next == null) {
       return null ;
@@ -77,7 +106,7 @@ class MyLinkedList {
     }
   }
 
-  public Node mergeSort(Node head) {
+  public Node mergeSort(Node head) { // O(nlogn)
     if(head == null || head . next == null)
       return head ;
     Node start = head ;
@@ -255,7 +284,7 @@ public class LinkedList {
       "5 : Delete by position\n6 : Get length iterative\n7 : Get length recursive\n8 : Swap nodes\n" +
       "9 : Get value at position\n10 : Reverse Linked list iteratively\n11 : Reverse Linked list recursively (Method 1)\n" +
       "12 : Reverse Linked list recursively (Method 2)\n13 : Merge two sorted Linked list\n" +
-      "14 : Merge Sort") ;
+      "14 : Merge Sort\n15 : Reverse Linked list in groups") ;
       System . out . print("Your choice : ") ;
       Scanner reader = new Scanner(System . in) ;
       choice = reader . nextInt() ;
@@ -369,6 +398,13 @@ public class LinkedList {
         case 14 : {
           System . out . print("After sorting : ") ;
           list . head = list . mergeSort(list . head) ;
+          list . printList() ;
+          break ;
+        }
+        case 15 : {
+          System . out . print("Enter group size : ") ;
+          int k = reader . nextInt() ;
+          list . reverseLinkedListInGroups(k) ;
           list . printList() ;
           break ;
         }
