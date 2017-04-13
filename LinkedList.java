@@ -57,9 +57,40 @@ class MyLinkedList {
     rest . next = first ;
   }
 
-  public static void sortedMergeTwoSortedLinkedList(Node first , Node second) {
+  public Node breakIntoHalf(Node source) {
+    Node fast , slow ;
+    if(source == null || source . next == null) {
+      return null ;
+    } else {
+      slow = source ;
+      fast = source . next ;
+      while(fast != null) {
+        fast = fast . next ;
+        if(fast != null) {
+          slow = slow . next ;
+          fast = fast . next ;
+        }
+      }
+      Node mid1 = slow . next ;
+      slow . next = null ;
+      return mid1 ;
+    }
+  }
+
+  public Node mergeSort(Node head) {
+    if(head == null || head . next == null)
+      return head ;
+    Node start = head ;
+    Node mid1 = this . breakIntoHalf(head) ;
+    start = mergeSort(start) ;
+    mid1 = mergeSort(mid1) ;
+    Node th = MyLinkedList . sortedMergeTwoSortedLinkedList(start , mid1) ;
+    return th ;
+  }
+
+  public static Node sortedMergeTwoSortedLinkedList(Node first , Node second) {
     if(first == null || second == null) {
-      return ;
+      return null ;
     }
     if(first . data <= second . data) {
       Node temp = first ;
@@ -76,6 +107,10 @@ class MyLinkedList {
       temp . next = first ;
       sortedMergeTwoSortedLinkedList(first , temp1) ;
     }
+    if(first . data <= second . data)
+      return first ;
+    else
+      return second ;
   }
 
   public int getLengthIterative() {
@@ -100,9 +135,13 @@ class MyLinkedList {
     Node n = new Node() ;
     n . data = num ;
     if(this . head == null) {
-      n . next = null ;
-      this . head = n ;
-      System . out . println(num + " inserted at pos " + pos + " ...") ;
+      if(pos > 0) {
+        System . out . println("Invalid position ...") ;
+      } else {
+        n . next = null ;
+        this . head = n ;
+        System . out . println(num + " inserted at pos " + pos + " ...") ;
+      }
     } else {
       Node temp = this . head ;
       int i = 0 ;
@@ -318,11 +357,8 @@ public class LinkedList {
               int num = reader . nextInt() ;
               list1 . insertElem(num , list1 . getLengthIterative()) ;
             }
-            if(list . head != null) {
-              MyLinkedList . sortedMergeTwoSortedLinkedList(list1 . head , list . head) ;
-              if(list1 . head . data <= list . head . data)
-                list . head = list1 . head ;
-            }
+            if(list . head != null)
+              list . head = MyLinkedList . sortedMergeTwoSortedLinkedList(list1 . head , list . head) ;
             else
               list . head = list1 . head ;
           }
@@ -332,8 +368,9 @@ public class LinkedList {
         }
         case 14 : {
           System . out . print("After sorting : ") ;
-          list . mergeSort() ;
+          list . head = list . mergeSort(list . head) ;
           list . printList() ;
+          break ;
         }
         default : {
           System . out . println("Invalid choice ... Try again ...") ;
