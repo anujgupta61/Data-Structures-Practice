@@ -6,40 +6,46 @@ class Node {
 	Node next ;
 }
 
-class MyDoublyLinkedList {
+class MyCircularDoublyLinkedList {
 	Node first ;
 	Node last ;
 
 	public void printForward() {
 		System . out . print("Linked list ( Forward manner ) - ") ;
 		Node temp = this . first ;
-		while(temp != null) {
-			System . out . print(temp . data + "\t") ;
+		System . out . print(temp . data + "\t") ;
+		while(temp . next != this . first) {
 			temp = temp . next ;
+			System . out . print(temp . data + "\t") ;
 		}
-		//System . out . print("first.data - " + this . first . data + " , last.data - " + this . last . data) ;
+		//System . out . print("first.data - " + this . first . data + " , first.prev.data - " + this . first . prev . data + " , last.data - " + 
+		//	this . last . data + " , last.prev.data - " + this . last . prev . data) ;
 		System . out . print("\n\n") ;
 	}
 
 	public void printBackward() {
 		System . out . print("Linked list ( Backward manner ) - ") ;
 		Node temp = this . last ;
-		while(temp != null) {
-			System . out . print(temp . data + "\t") ;
+		System . out . print(temp . data + "\t") ;
+		while(temp . prev != this . last) {
 			temp = temp . prev ;
+			System . out . print(temp . data + "\t") ;
 		}
-		//System . out . print("first.data - " + this . first . data + " , last.data - " + this . last . data) ;
+		//System . out . print("first.data - " + this . first . data + " , first.next.data - " + this . first . next . data + " , last.data - " + 
+		//	this . last . data + " , last.next.data - " + this . last . next . data) ;
 		System . out . print("\n\n") ;
 	}
 
 	public int searchNum(int num) {
 		Node temp = this . first ;
+		if(temp . data == num) 
+			return 0 ;
 		int pos = 0 ;
-		while(temp != null) {
-			if(temp . data == num) 
-				return pos ;
+		while(temp . next != this . first) {
 			temp = temp . next ;
 			pos ++ ; 
+			if(temp . data == num) 
+				return pos ;
 		}
 		return -1 ;
 	}
@@ -52,7 +58,7 @@ class MyDoublyLinkedList {
 				continue ;
 			}
 			temp = temp . next ;
-			if(temp == null && i < pos) {
+			if(temp == this . first && i < pos) {
 				System . out . println("Entered position is greater than length of Linked List ...") ;
 				return ;
 			}
@@ -60,18 +66,24 @@ class MyDoublyLinkedList {
 		Node newNode = new Node() ;
 		newNode . data = n ;
 		newNode . prev = temp ;
-		if(temp != null) {
-			if(temp . next != null)
+		if(pos > 0) {
+			if(temp . next != this . first)
 				temp . next . prev = newNode ;
-			else
+			else {
 				this . last = newNode ;
+				this . first . prev = newNode ;
+			}
 			newNode . next = temp . next ;
 			temp . next = newNode ;
 		} else {
-			if(this . first == null)
+			if(this . first == null) {
 				this . last = newNode ;
-			newNode . next = this . first ;
+				newNode . next = newNode ;
+			} else {
+				newNode . next = this . first ;
+			}
 			this . first = newNode ;
+			newNode . prev = this . last ;
 		}
 		System . out . println(n + " inserted at position " + pos + "...") ;
 	}
@@ -94,18 +106,18 @@ class MyDoublyLinkedList {
 			Node temp = this . first ;
 			for(int i = 0 ; i < pos ; i ++)
 				temp = temp . next ;
-			if(temp . prev != null)
-				temp . prev . next = temp . next ;
-			if(temp . next != null)
-				temp . next . prev = temp . prev ;
-			if(temp . next == null && temp . prev == null) {
+			temp . prev . next = temp . next ;
+			temp . next . prev = temp . prev ;
+			if(temp . next == temp) {
 				this . first = null ;
 				this . last = null ;
 			}
-			if(temp . next != null && temp . prev == null) {
+			if(temp . next != this . first && temp . prev == this . last) {
+				this . last . next = temp . next ;
 				this . first = temp . next ;
 			}
-			if(temp . next == null && temp . prev != null) {
+			if(temp . next == this . first && temp . prev != this . last) {
+				this . first . prev = temp . prev ;
 				this . last = temp . prev ;
 			}
 			temp . next = null ;
@@ -115,9 +127,9 @@ class MyDoublyLinkedList {
 	}
 }
 
-public class DoublyLinkedList {
+public class CircularDoublyLinkedList {
 	public static void main(String[] args) {
-		MyDoublyLinkedList dll = new MyDoublyLinkedList() ;
+		MyCircularDoublyLinkedList cdll = new MyCircularDoublyLinkedList() ;
 		int choice = 0 ;
 		while(choice != -1) {
 			System . out . println("Choose -\n1 : Print Linked list in forward manner\n2 : Print Linked list in backward manner\n3 : Search" +
@@ -127,28 +139,28 @@ public class DoublyLinkedList {
 			choice = scan . nextInt() ;
 			switch(choice) {
 				case 1 : {
-					if(dll . first == null)
+					if(cdll . first == null)
 						System . out . println("Linked list is empty ...") ;
 					else {
-						dll . printForward() ;
+						cdll . printForward() ;
 					} 
 					break ;
 				}
 				case 2 : {
-					if(dll . last == null)
+					if(cdll . last == null)
 						System . out . println("Linked list is empty ...") ;
 					else {
-						dll . printBackward() ;
+						cdll . printBackward() ;
 					}
 					break ;
 				}
 				case 3 : {
-					if(dll . last == null)
+					if(cdll . last == null)
 						System . out . println("Linked list is empty ...") ;
 					else {
 						System . out . println("Enter number to search : ") ;
 						int num = scan . nextInt() ;
-						int pos = dll . searchNum(num) ;
+						int pos = cdll . searchNum(num) ;
 						if(pos == -1) 
 							System . out . println(num + " does not exist ...") ;
 						else
@@ -157,14 +169,14 @@ public class DoublyLinkedList {
 					break ;
 				}
 				case 4 : {
-					if(dll . last == null)
+					if(cdll . last == null)
 						System . out . println("Linked list does not have any number yet ...") ;
 					else {
 						System . out . println("Enter number after which insertion is to be done : ") ;
 						int num = scan . nextInt() ;
 						System . out . println("Enter number to insert : ") ;
 						int n = scan . nextInt() ;
-						dll . insertAfter(num , n) ;
+						cdll . insertAfter(num , n) ;
 					}
 					break ;
 				}
@@ -173,16 +185,16 @@ public class DoublyLinkedList {
 					int num = scan . nextInt() ;
 					System . out . println("Enter position to insert : ") ;
 					int pos = scan . nextInt() ;
-					dll . insertNum(num , pos) ;
+					cdll . insertNum(num , pos) ;
 					break ;
 				}
 				case 6 : {
-					if(dll . last == null)
+					if(cdll . last == null)
 						System . out . println("Linked list is empty ...") ;
 					else {
 						System . out . println("Enter number to delete : ") ;
 						int num = scan . nextInt() ;
-						dll . deleteNum(num) ;
+						cdll . deleteNum(num) ;
 					}
 						break ;
 				}
@@ -195,5 +207,5 @@ public class DoublyLinkedList {
 				}
 			}
 		}
-	}
+	}	
 }
