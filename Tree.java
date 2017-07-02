@@ -171,3 +171,33 @@ public class Tree {
 		}
 	}
 }
+
+/* 
+	AVL Trees - 
+		Used to balance BST so as to reduce time complexities of operations.
+		Time complexity of Tree operations is O(h). h is height.
+		When data is inserted in sorted order, Tree becomes similar to linear list and time complexity becomes O(n).
+		Self balancing trees.
+		Balance factor of a node = Height of right subtree - Height of left subtree
+		For balancing trees:
+			4 types of rotations - Right, Left, Left-Right, Right-Left
+*/
+
+/*
+	Spanning Trees -
+		Subsets of a connected graph having all vertices and minimum number of edges.
+		Minimally connected and Maximally acyclic.
+		Number of possible spanning trees for complete graph is n^(n-2). 
+		For a disconnected graph, no spanning tree can be found.
+		Minimum spanning tree (MST) is one having minimum total cost of edges.
+		Algorithms for finding MST are Prim's and Kruskal's algorithm.
+*/
+
+/*
+	Heaps -
+		Special case of balanced Binary trees.
+		Parent's key is either greater than (Max Heap) or less than (Min Heap) all its children.
+		Heapify is a process to convert a binary tree to Heap.
+		Insertion always takes place at farthest right of bottom level. Then heapify.
+		Deletion always takes place at root. Remove root and move farthest right node of bottom level to top. Then heapify.
+*/
